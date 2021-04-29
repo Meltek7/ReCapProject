@@ -19,11 +19,13 @@ namespace Business.Concrete
         public void Add(Color color)
         {
             _colorDal.Add(color);
+            Console.WriteLine(color.Name + " added!");
         }
 
         public void Delete(Color color)
         {
             _colorDal.Delete(color);
+            Console.WriteLine(color.Name + " deleted!");
         }
 
         public List<Color> GetAll()
@@ -34,6 +36,7 @@ namespace Business.Concrete
         public void Update(Color color)
         {
             _colorDal.Update(color);
+            Console.WriteLine(color.Id + " updated to " + color.Name);
         }
     }
 }
