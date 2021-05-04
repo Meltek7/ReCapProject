@@ -11,7 +11,7 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            //TestingCar();
+            TestingCar();
             TestingCarDetail();
             TestingColor();
             TestingBrand();
@@ -21,19 +21,33 @@ namespace ConsoleUI
         private static void TestingCarDetail()
         {
             CarManager carManager = new CarManager(new EfCarDal());
-            foreach (var car in carManager.GetCarDetails())
+
+            var result = carManager.GetCarDetails();
+
+            if (result.Success==true)
             {
-                Console.WriteLine("Car " + car.CarId + ":" + car.Description + " / " + car.BrandName + " / " + car.ModelYear + " / " + car.ColorName);
-                Console.WriteLine("        Daily Price : " + car.DailyPrice);
+                foreach (var car in result.Data)
+                {
+                    Console.WriteLine(result.Message);
+                    Console.WriteLine("Car " + car.CarId + ":" + car.Description + " / " + car.BrandName + " / " + car.ModelYear + " / " + car.ColorName);
+                    Console.WriteLine("        Daily Price : " + car.DailyPrice);
+                }
             }
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
+            
         }
 
         private static void TestingCar()
         {
             CarManager carManager = new CarManager(new EfCarDal());
 
+            var result = carManager.GetAll();
+
             Console.WriteLine("Cars : ");
-            foreach (var car in carManager.GetAll())
+            foreach (var car in result.Data)
             {
                 Console.WriteLine("Car ID:{0}, Brand ID:{1}, Color ID:{2}, Daily Price:{3}, Description:{4}", car.Id, car.BrandId, car.ColorId, car.DailyPrice, car.Description);
             }
@@ -44,14 +58,24 @@ namespace ConsoleUI
             ColorManager colorManager = new ColorManager(new EfColorDal());
             Console.WriteLine("----------");
             Console.WriteLine("Colors : ");
-            foreach (var color in colorManager.GetAll())
+
+            var result = colorManager.GetAll();
+            if (result.Success==true)
             {
-                Console.WriteLine(color.Id + " " + color.Name);
+                foreach (var color in result.Data)
+                {
+                    Console.WriteLine(color.Id + " " + color.Name);
+                }
+            }
+            else
+            {
+                Console.WriteLine(result.Message);
             }
 
             Color color1 = new Color() { Id = 4, Name = "White" };
 
-            List<Color> list = colorManager.GetAll();
+
+            List<Color> list = result.Data;
 
             for (int i = 0; i < list.Count; i++)
 
@@ -63,7 +87,7 @@ namespace ConsoleUI
                     colorManager.Delete(color1);
                     Console.WriteLine("Colors After Deleting : ");
 
-                    foreach (var color2 in colorManager.GetAll())
+                    foreach (var color2 in result.Data)
                     {
                         Console.WriteLine(color2.Id + " " + color2.Name);
                     }
@@ -77,7 +101,7 @@ namespace ConsoleUI
                     Console.WriteLine("----------");
                     colorManager.Add(color1);
                     Console.WriteLine("Colors After Adding : ");
-                    foreach (var color3 in colorManager.GetAll())
+                    foreach (var color3 in result.Data)
                     {
                         Console.WriteLine(color3.Id + " " + color3.Name);
                     }
@@ -90,7 +114,7 @@ namespace ConsoleUI
             Console.WriteLine("----------");
             colorManager.Update(color4);
             Console.WriteLine("Colors After Updating : ");
-            foreach (var color in colorManager.GetAll())
+            foreach (var color in result.Data)
             {
                 Console.WriteLine(color.Id + " " + color.Name);
             }
@@ -103,14 +127,24 @@ namespace ConsoleUI
             BrandManager brandManager = new BrandManager(new EfBrandDal());
             Console.WriteLine("----------");
             Console.WriteLine("Brands : ");
-            foreach (var brand in brandManager.GetAll())
+
+            var result = brandManager.GetAll();
+            if (result.Success == true)
             {
-                Console.WriteLine(brand.Id + " " + brand.Name);
+                foreach (var brand in result.Data)
+                {
+                    Console.WriteLine(brand.Id + " " + brand.Name);
+                }
             }
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
+            
 
             Brand brand1 = new Brand() { Id = 4, Name = "Chevrolet" };
 
-            List<Brand> list = brandManager.GetAll();
+            List<Brand> list = result.Data;
 
             for (int i = 0; i < list.Count; i++)
 
@@ -122,7 +156,7 @@ namespace ConsoleUI
                     brandManager.Delete(brand1);
                     Console.WriteLine("Brands After Deleting : ");
 
-                    foreach (var brand2 in brandManager.GetAll())
+                    foreach (var brand2 in result.Data)
                     {
                         Console.WriteLine(brand2.Id + " " + brand2.Name);
                     }
@@ -136,7 +170,7 @@ namespace ConsoleUI
                     Console.WriteLine("----------");
                     brandManager.Add(brand1);
                     Console.WriteLine("Brands After Adding : ");
-                    foreach (var brand3 in brandManager.GetAll())
+                    foreach (var brand3 in result.Data)
                     {
                         Console.WriteLine(brand3.Id + " " + brand3.Name);
                     }
@@ -144,7 +178,7 @@ namespace ConsoleUI
                 }
             }
 
-            foreach (var brand in brandManager.GetAll())
+            foreach (var brand in result.Data)
             {
                 if (brand.Name == "Chevrolet")
                 {
@@ -152,7 +186,7 @@ namespace ConsoleUI
                     Console.WriteLine("----------");
                     brandManager.Update(brand4);
                     Console.WriteLine("Brands After Updating : ");
-                    foreach (var brand5 in brandManager.GetAll())
+                    foreach (var brand5 in result.Data)
                     {
                         Console.WriteLine(brand5.Id + " " + brand5.Name);
                     }
@@ -164,7 +198,7 @@ namespace ConsoleUI
                     Console.WriteLine("----------");
                     brandManager.Update(brand5);
                     Console.WriteLine("Brands After Updating : ");
-                    foreach (var brand6 in brandManager.GetAll())
+                    foreach (var brand6 in result.Data)
                     {
                         Console.WriteLine(brand6.Id + " " + brand6.Name);
                     }

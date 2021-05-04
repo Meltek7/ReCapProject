@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -16,27 +18,55 @@ namespace Business.Concrete
             _colorDal = colorDal;
         }
 
-        public void Add(Color color)
+        public IResult Add(Color color)
         {
+            if (color.Name.Length < 2)
+            {
+                return new ErrorResult(Messages.InvalidName);
+            }
             _colorDal.Add(color);
-            Console.WriteLine(color.Name + " added!");
+
+            return new SuccessResult(Messages.Added);
         }
 
-        public void Delete(Color color)
+        public IResult Delete(Color color)
         {
-            _colorDal.Delete(color);
-            Console.WriteLine(color.Name + " deleted!");
+            try
+            {
+                _colorDal.Delete(color);
+                return new SuccessResult(Messages.Deleted);
+            }
+            catch (Exception)
+            {
+                return new ErrorResult(Messages.Error);
+            }
         }
 
-        public List<Color> GetAll()
+        public IDataResult<List<Color>> GetAll()
         {
-            return _colorDal.GetAll();
+            try
+            {
+                return new SuccessDataResult<List<Color>>(_colorDal.GetAll(), Messages.Listed);
+            }
+            catch (Exception)
+            {
+                return new ErrorDataResult<List<Color>>((Messages.Error));
+            }
+
         }
 
-        public void Update(Color color)
+        public IResult Update(Color color)
         {
-            _colorDal.Update(color);
-            Console.WriteLine(color.Id + " updated to " + color.Name);
+            try
+            {
+                _colorDal.Update(color);
+                return new SuccessResult(Messages.Updated);
+            }
+            catch (Exception)
+            {
+                return new ErrorResult(Messages.Error);
+
+            }
         }
     }
 }
